@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  }
+}
+
+@layer components {
+  .quiz-option {
+    @apply w-full p-4 text-left rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 cursor-pointer;
+  }
+  
+  .quiz-option.selected {
+    @apply border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20;
+  }
+  
+  .quiz-option.correct {
+    @apply border-green-500 dark:border-green-400 bg-green-50 dark:bg-green-900/20;
+  }
+  
+  .quiz-option.incorrect {
+    @apply border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20;
+  }
+} 
