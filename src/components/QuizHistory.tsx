@@ -16,19 +16,27 @@ const QuizHistory: React.FC = () => {
   })
   const [showAll, setShowAll] = useState(false)
 
+  const updateHistory = () => {
+    setHistory(getQuizHistory())
+    setStats(getQuizStats())
+  }
+
   useEffect(() => {
-    const updateHistory = () => {
-      setHistory(getQuizHistory())
-      setStats(getQuizStats())
-    }
-    
     updateHistory()
     
     // Listen for storage changes (when quiz results are saved)
     const handleStorageChange = () => updateHistory()
-    window.addEventListener('storage', handleStorageChange)
     
-    return () => window.removeEventListener('storage', handleStorageChange)
+    // Listen for custom event when quiz is completed
+    const handleQuizCompleted = () => updateHistory()
+    
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('quizCompleted', handleQuizCompleted)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('quizCompleted', handleQuizCompleted)
+    }
   }, [])
 
   const handleClearHistory = () => {

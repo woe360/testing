@@ -29,6 +29,7 @@ const Quiz: React.FC<QuizProps> = ({
     showResults: false
   })
   const [startTime] = useState<Date>(new Date())
+  const [resultSaved, setResultSaved] = useState(false)
 
   const currentQuestion = questions[quizState.currentQuestionIndex]
   const currentAnswer = quizState.answers.find(a => a.questionId === currentQuestion?.id)
@@ -80,6 +81,7 @@ const Quiz: React.FC<QuizProps> = ({
         isCompleted: false,
         showResults: false
       })
+      setResultSaved(false)
     }
   }, [questions, onBack])
 
@@ -99,11 +101,15 @@ const Quiz: React.FC<QuizProps> = ({
 
   // Save result when quiz is completed
   useEffect(() => {
-    if (quizState.isCompleted && !quizState.showResults) {
+    if (quizState.isCompleted && quizState.showResults && !resultSaved) {
       const result = calculateResult()
       saveQuizResult(mode, result.score, result.totalQuestions, instantFeedback, startTime, chapterInfo)
+      setResultSaved(true)
+      
+      // Trigger a custom event to notify QuizHistory component
+      window.dispatchEvent(new Event('quizCompleted'))
     }
-  }, [quizState.isCompleted, quizState.showResults, mode, instantFeedback, startTime, chapterInfo])
+  }, [quizState.isCompleted, quizState.showResults, resultSaved, mode, instantFeedback, startTime, chapterInfo])
 
   if (quizState.showResults) {
     return (
