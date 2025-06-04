@@ -7,8 +7,8 @@ import ClientWrapper from './ClientWrapper'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ISTQB Quiz App',
-  description: 'Practice ISTQB Foundation Level certification questions',
+  title: 'Exam Preparation Quiz App',
+  description: 'Practice for exams in quiz format',
 }
 
 export default function RootLayout({

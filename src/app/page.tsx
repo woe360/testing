@@ -16,7 +16,7 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 mt-12">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 mt-12">
           {/* Testing Section */}
           <Link href="/testing" className="group">
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer h-[380px] md:h-[400px] flex flex-col">

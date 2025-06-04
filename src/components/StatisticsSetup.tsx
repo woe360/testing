@@ -26,16 +26,6 @@ const StatisticsSetup: React.FC<StatisticsSetupProps> = ({ onStartQuiz, totalQue
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 px-4 transition-colors duration-300">
       <div className="max-w-8xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8 lg:mb-16">          
-          <h1 className="text-3xl lg:text-5xl font-bold text-slate-800 dark:text-slate-100 mb-4 lg:mb-6 transition-colors duration-300">
-            Statistics Practice
-          </h1>
-          <p className="text-base lg:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto transition-colors duration-300">
-            Master statistical concepts, probability theory, and data analysis techniques
-          </p>
-        </div>
-
         {/* Instant Feedback Toggle */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl lg:rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 lg:p-8 mb-8 lg:mb-12 max-w-2xl mx-auto transition-colors duration-300">
           <div className="flex items-center justify-between">

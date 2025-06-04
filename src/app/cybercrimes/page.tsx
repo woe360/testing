@@ -6,18 +6,21 @@ import Link from 'next/link'
 export default function CybercrimesPage() {
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+      {/* Back Button - Top Left */}
+      <div className="absolute top-10 left-10 z-10">
+        <Link href="/" className="flex items-center px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200 shadow-sm">
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span className="text-sm font-medium">Back</span>
+        </Link>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         <header className="text-center py-8">
-          <div className="flex items-center justify-center mb-4">
-            <Link href="/" className="mr-4 p-2 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-            </Link>
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100">
-              Cybercrimes Practice
-            </h1>
-          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-4">
+            Cybercrimes Practice
+          </h1>
           <p className="text-lg text-slate-600 dark:text-slate-400">
             Master Cybercrime Investigation and Digital Evidence Handling
           </p>
