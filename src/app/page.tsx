@@ -65,14 +65,16 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      <Quiz 
-        questions={currentQuestions}
-        onBack={handleBackToSetup}
-        mode={quizType}
-        instantFeedback={instantFeedback}
-        chapterInfo={chapterInfo}
-      />
-    </main>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl">
+        <Quiz 
+          questions={currentQuestions}
+          onBack={handleBackToSetup}
+          mode={quizType}
+          instantFeedback={instantFeedback}
+          chapterInfo={chapterInfo}
+        />
+      </div>
+    </div>
   )
 } 

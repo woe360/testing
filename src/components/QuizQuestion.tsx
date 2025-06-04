@@ -83,7 +83,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="mb-8">        
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 text-center mb-8 leading-tight transition-colors duration-300">
+        <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 text-center mb-8 leading-tight transition-colors duration-300">
           {question.question}
         </h2>
         
