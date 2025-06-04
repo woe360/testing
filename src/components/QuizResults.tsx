@@ -8,7 +8,7 @@ import QuizQuestion from './QuizQuestion'
 interface QuizResultsProps {
   result: QuizResult
   onTryAgain: () => void
-  mode?: 'full' | 'exam' | 'chapter'
+  mode?: 'full' | 'exam' | 'chapter' | 'additional'
 }
 
 const QuizResults: React.FC<QuizResultsProps> = ({ result, onTryAgain, mode = 'full' }) => {
@@ -31,6 +31,12 @@ const QuizResults: React.FC<QuizResultsProps> = ({ result, onTryAgain, mode = 'f
       if (percentage >= 80) return 'Chapter mastered!'
       if (percentage >= 60) return 'Good understanding!'
       return 'Review this chapter!'
+    }
+    
+    if (mode === 'additional') {
+      if (percentage >= 80) return 'Excellent extra practice!'
+      if (percentage >= 60) return 'Good additional practice!'
+      return 'Keep practicing these bonus questions!'
     }
     
     if (percentage >= 80) return 'Excellent work!'
@@ -62,12 +68,14 @@ const QuizResults: React.FC<QuizResultsProps> = ({ result, onTryAgain, mode = 'f
   const getTitle = () => {
     if (mode === 'exam') return 'Exam Complete!'
     if (mode === 'chapter') return 'Chapter Complete!'
+    if (mode === 'additional') return 'Additional Questions Complete!'
     return 'Quiz Complete!'
   }
 
   const getButtonText = () => {
     if (mode === 'exam') return 'Back to Quiz Selection'
     if (mode === 'chapter') return 'Back to Quiz Selection'
+    if (mode === 'additional') return 'Back to Quiz Selection'
     return 'Try Again'
   }
 

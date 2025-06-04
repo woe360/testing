@@ -10,6 +10,7 @@ const QuizHistory: React.FC = () => {
     totalQuizzes: 0,
     totalExams: 0,
     totalChapters: 0,
+    totalAdditional: 0,
     averageScore: 0,
     examPassRate: 0,
     bestScore: 0
@@ -47,6 +48,7 @@ const QuizHistory: React.FC = () => {
         totalQuizzes: 0,
         totalExams: 0,
         totalChapters: 0,
+        totalAdditional: 0,
         averageScore: 0,
         examPassRate: 0,
         bestScore: 0
@@ -96,7 +98,7 @@ const QuizHistory: React.FC = () => {
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-7 gap-4 mb-8">
         <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800 transition-colors duration-300">
           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1 transition-colors duration-300">{stats.totalQuizzes}</div>
           <div className="text-sm text-blue-700 dark:text-blue-300 font-medium transition-colors duration-300">Full Quizzes</div>
@@ -108,6 +110,10 @@ const QuizHistory: React.FC = () => {
         <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border border-purple-200 dark:border-purple-800 transition-colors duration-300">
           <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-1 transition-colors duration-300">{stats.totalChapters}</div>
           <div className="text-sm text-purple-700 dark:text-purple-300 font-medium transition-colors duration-300">Chapters</div>
+        </div>
+        <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-2xl border border-orange-200 dark:border-orange-800 transition-colors duration-300">
+          <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1 transition-colors duration-300">{stats.totalAdditional}</div>
+          <div className="text-sm text-orange-700 dark:text-orange-300 font-medium transition-colors duration-300">Additional</div>
         </div>
         <div className="text-center p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-200 dark:border-indigo-800 transition-colors duration-300">
           <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-1 transition-colors duration-300">{stats.averageScore}%</div>
@@ -133,6 +139,8 @@ const QuizHistory: React.FC = () => {
                   ? entry.passed ? 'bg-green-600' : 'bg-red-600'
                   : entry.mode === 'chapter'
                   ? 'bg-purple-600'
+                  : entry.mode === 'additional'
+                  ? 'bg-orange-600'
                   : 'bg-blue-600'
               }`} />
               
@@ -140,7 +148,9 @@ const QuizHistory: React.FC = () => {
                 <div className="flex items-center space-x-3 mb-1">
                   <span className="font-semibold text-slate-800 dark:text-slate-100 text-lg transition-colors duration-300">
                     {entry.mode === 'exam' ? 'Exam Simulation' : 
-                     entry.mode === 'chapter' ? `Chapter ${entry.chapterInfo?.id}` : 'Full Quiz'}
+                     entry.mode === 'chapter' ? `Chapter ${entry.chapterInfo?.id}` : 
+                     entry.mode === 'additional' ? 'Additional Questions' :
+                     'Full Quiz'}
                   </span>
                   {entry.instantFeedback && (
                     <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 text-xs rounded-full border border-yellow-300 dark:border-yellow-700 font-medium transition-colors duration-300">
@@ -151,8 +161,10 @@ const QuizHistory: React.FC = () => {
                 <div className="text-slate-600 dark:text-slate-300 transition-colors duration-300">
                   {entry.mode === 'chapter' && entry.chapterInfo ? (
                     <span className="text-purple-600 dark:text-purple-400 font-medium transition-colors duration-300">{entry.chapterInfo.name}</span>
+                  ) : entry.mode === 'additional' ? (
+                    <span className="text-orange-600 dark:text-orange-400 font-medium transition-colors duration-300">Extra Practice Questions</span>
                   ) : null}
-                  {entry.mode === 'chapter' && entry.chapterInfo ? ' • ' : ''}
+                  {((entry.mode === 'chapter' && entry.chapterInfo) || entry.mode === 'additional') ? ' • ' : ''}
                   {formatDate(entry.date)}
                   {entry.duration && ` • ${entry.duration}m`}
                 </div>

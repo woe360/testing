@@ -28,7 +28,7 @@ export interface QuizState {
 export interface QuizHistoryEntry {
   id: string
   date: string
-  mode: 'full' | 'exam' | 'chapter'
+  mode: 'full' | 'exam' | 'chapter' | 'additional'
   score: number
   totalQuestions: number
   percentage: number

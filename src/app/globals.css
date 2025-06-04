@@ -11,7 +11,7 @@
 
 @layer components {
   .quiz-option {
-    @apply w-full p-4 text-left rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 cursor-pointer;
+    @apply w-full p-3 md:p-4 text-left rounded-lg md:rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 cursor-pointer text-sm md:text-base;
   }
   
   .quiz-option.selected {

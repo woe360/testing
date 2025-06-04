@@ -10,7 +10,7 @@ import QuizResults from './QuizResults'
 interface QuizProps {
   questions: QuizQuestionType[]
   onBack?: () => void
-  mode?: 'full' | 'exam' | 'chapter'
+  mode?: 'full' | 'exam' | 'chapter' | 'additional'
   instantFeedback?: boolean
   chapterInfo?: { id: number, name: string }
 }
@@ -129,6 +129,13 @@ const Quiz: React.FC<QuizProps> = ({
               </span>
             </div>
           )}
+          {mode === 'additional' && (
+            <div className="text-center mb-6">
+              <span className="inline-block bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300">
+                Additional Questions Complete
+              </span>
+            </div>
+          )}
           <QuizResults 
             result={calculateResult()} 
             onTryAgain={handleTryAgain}
@@ -143,34 +150,38 @@ const Quiz: React.FC<QuizProps> = ({
   const isLastQuestion = quizState.currentQuestionIndex === questions.length - 1
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 px-4 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-4 md:py-8 px-2 md:px-4 transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
         {/* Quiz Mode Indicator */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-4">
+        <div className="text-center mb-4 md:mb-6">
+          <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
             {mode === 'exam' ? (
-              <span className="inline-block bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300">
+              <span className="inline-block bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors duration-300">
                 Exam Simulation - {questions.length} Questions
               </span>
             ) : mode === 'chapter' && chapterInfo ? (
-              <span className="inline-block bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300">
+              <span className="inline-block bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors duration-300">
                 Chapter {chapterInfo.id}: {chapterInfo.name} - {questions.length} Questions
               </span>
+            ) : mode === 'additional' ? (
+              <span className="inline-block bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors duration-300">
+                Additional Questions - {questions.length} Questions
+              </span>
             ) : (
-              <span className="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300">
+              <span className="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors duration-300">
                 Full Quiz - {questions.length} Questions
               </span>
             )}
             
             {instantFeedback && (
-              <span className="inline-block bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 px-3 py-1 rounded-full text-xs font-medium transition-colors duration-300">
+              <span className="inline-block bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-medium transition-colors duration-300">
                 Instant Feedback ON
               </span>
             )}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-8 transition-colors duration-300">
+        <div className="bg-white dark:bg-slate-800 rounded-xl md:rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 md:p-8 transition-colors duration-300">
           <QuizQuestion
             question={currentQuestion}
             questionNumber={quizState.currentQuestionIndex + 1}
@@ -193,10 +204,10 @@ const Quiz: React.FC<QuizProps> = ({
 
         {/* Back to Setup Button */}
         {onBack && (
-          <div className="text-center mt-6">
+          <div className="text-center mt-4 md:mt-6">
             <button
               onClick={onBack}
-              className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-sm transition-colors duration-300"
+              className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs md:text-sm transition-colors duration-300"
             >
               ← Back to Quiz Selection
             </button>

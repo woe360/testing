@@ -4,11 +4,11 @@ import React, { useState } from 'react'
 import Quiz from '../components/Quiz'
 import QuizSetup from '../components/QuizSetup'
 import { sampleQuestions } from '../data/sampleQuestions'
-import { getRandomQuestions, getQuestionsByChapter } from '../utils/quizUtils'
+import { getRandomQuestions, getQuestionsByChapter, getAdditionalQuestions } from '../utils/quizUtils'
 import { QuizQuestion } from '../types/quiz'
 
 type QuizMode = 'setup' | 'quiz'
-type QuizType = 'full' | 'exam' | 'chapter'
+type QuizType = 'full' | 'exam' | 'chapter' | 'additional'
 
 export default function Home() {
   const [mode, setMode] = useState<QuizMode>('setup')
@@ -31,6 +31,9 @@ export default function Home() {
     } else if (type === 'chapter' && chapterId) {
       questions = getQuestionsByChapter(sampleQuestions, chapterId)
       setChapterInfo({ id: chapterId, name: chapterName || `Chapter ${chapterId}` })
+    } else if (type === 'additional') {
+      questions = getAdditionalQuestions(sampleQuestions)
+      setChapterInfo({ id: 7, name: 'Additional Practice Questions' })
     } else {
       questions = sampleQuestions
     }

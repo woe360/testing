@@ -7,7 +7,8 @@ export const chapters = [
   { id: 3, name: 'Static Testing', range: [25, 35] },
   { id: 4, name: 'Test Design Techniques', range: [36, 47] },
   { id: 5, name: 'Test Management', range: [48, 57] },
-  { id: 6, name: 'Tool Support for Testing', range: [58, 58] }
+  { id: 6, name: 'Tool Support for Testing', range: [58, 58] },
+  { id: 7, name: 'Additional Practice Questions', range: [59, 78] }
 ]
 
 // Get questions for a specific chapter
@@ -18,6 +19,14 @@ export function getQuestionsByChapter(questions: QuizQuestion[], chapterId: numb
   return questions.filter(q => {
     const questionNum = parseInt(q.id)
     return questionNum >= chapter.range[0] && questionNum <= chapter.range[1]
+  })
+}
+
+// Get additional questions (59-78)
+export function getAdditionalQuestions(questions: QuizQuestion[]): QuizQuestion[] {
+  return questions.filter(q => {
+    const questionNum = parseInt(q.id)
+    return questionNum >= 59 && questionNum <= 78
   })
 }
 
@@ -63,7 +72,7 @@ export function isPassingScore(score: number, totalQuestions: number): boolean {
 const QUIZ_HISTORY_KEY = 'quiz_history'
 
 export function saveQuizResult(
-  mode: 'full' | 'exam' | 'chapter',
+  mode: 'full' | 'exam' | 'chapter' | 'additional',
   score: number,
   totalQuestions: number,
   instantFeedback: boolean,
@@ -119,6 +128,7 @@ export function getQuizStats(): {
   totalQuizzes: number
   totalExams: number
   totalChapters: number
+  totalAdditional: number
   averageScore: number
   examPassRate: number
   bestScore: number
@@ -130,6 +140,7 @@ export function getQuizStats(): {
       totalQuizzes: 0,
       totalExams: 0,
       totalChapters: 0,
+      totalAdditional: 0,
       averageScore: 0,
       examPassRate: 0,
       bestScore: 0
@@ -139,6 +150,7 @@ export function getQuizStats(): {
   const fullQuizzes = history.filter(entry => entry.mode === 'full')
   const examResults = history.filter(entry => entry.mode === 'exam')
   const chapterQuizzes = history.filter(entry => entry.mode === 'chapter')
+  const additionalQuizzes = history.filter(entry => entry.mode === 'additional')
   const examPasses = examResults.filter(entry => entry.passed).length
 
   const averageScore = Math.round(
@@ -151,6 +163,7 @@ export function getQuizStats(): {
     totalQuizzes: fullQuizzes.length,
     totalExams: examResults.length,
     totalChapters: chapterQuizzes.length,
+    totalAdditional: additionalQuizzes.length,
     averageScore,
     examPassRate: examResults.length > 0 ? Math.round((examPasses / examResults.length) * 100) : 0,
     bestScore
