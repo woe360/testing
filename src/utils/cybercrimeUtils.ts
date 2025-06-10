@@ -1,13 +1,19 @@
 import { Question } from '../data/cybercrimeQuestions'
 import { QuizQuestion, QuizHistoryEntry, QuizResult, UserAnswer } from '../types/quiz'
 
+// Helper function to extract answer text from "A) Answer" format
+const extractAnswerText = (correctAnswer: string): string => {
+  // Remove the letter prefix like "A) ", "B) ", etc.
+  return correctAnswer.replace(/^[A-D]\)\s*/, '')
+}
+
 export const getRandomCybercrimeQuestions = (questions: Question[], count: number): QuizQuestion[] => {
   const shuffled = [...questions].sort(() => Math.random() - 0.5)
   return shuffled.slice(0, count).map(q => ({
     id: q.id.toString(),
     question: q.question,
     options: q.options,
-    correctAnswer: q.options.indexOf(q.correctAnswer),
+    correctAnswer: q.options.indexOf(extractAnswerText(q.correctAnswer)),
     explanation: '', // Add empty explanation as it's required by QuizQuestion type
     chapter: getChapterId(q.chapter)
   }))
@@ -21,7 +27,7 @@ export const getCybercrimeQuestionsByChapter = (questions: Question[], chapterId
       id: q.id.toString(),
       question: q.question,
       options: q.options,
-      correctAnswer: q.options.indexOf(q.correctAnswer),
+      correctAnswer: q.options.indexOf(extractAnswerText(q.correctAnswer)),
       explanation: '', // Add empty explanation as it's required by QuizQuestion type
       chapter: chapterId
     }))

@@ -42,9 +42,9 @@ export default function CybercrimesPage() {
         id: q.id.toString(),
         question: q.question,
         options: q.options,
-        correctAnswer: q.options.indexOf(q.correctAnswer),
+        correctAnswer: q.options.indexOf(q.correctAnswer.replace(/^[A-D]\)\s*/, '')),
         explanation: '',
-        chapter: 0 // Default chapter if not specified
+        chapter: 0
       }))
     }
     

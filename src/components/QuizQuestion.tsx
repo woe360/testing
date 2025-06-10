@@ -103,14 +103,14 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
           ))}
         </div>
         
-        {((showResults || (instantFeedback && selectedOption !== null)) && !showResults) && (
+        {((showResults || (instantFeedback && selectedOption !== null)) && !showResults) && question.explanation && question.explanation.trim() && (
           <div className="mt-4 md:mt-6 p-3 md:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg md:rounded-xl border border-blue-200 dark:border-blue-800 transition-colors duration-300">
             <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2 transition-colors duration-300 text-sm md:text-base">Explanation:</h3>
             <p className="text-blue-800 dark:text-blue-200 transition-colors duration-300 text-sm md:text-base">{question.explanation}</p>
           </div>
         )}
 
-        {showResults && (
+        {showResults && question.explanation && question.explanation.trim() && (
           <div className="mt-4 md:mt-6 p-3 md:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg md:rounded-xl border border-blue-200 dark:border-blue-800 transition-colors duration-300">
             <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-2 transition-colors duration-300 text-sm md:text-base">Explanation:</h3>
             <p className="text-blue-800 dark:text-blue-200 transition-colors duration-300 text-sm md:text-base">{question.explanation}</p>
