@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { QuizQuestion } from '../types/quiz'
+import { QuizQuestion, QuizResult, UserAnswer } from '../types/quiz'
+import { saveCybercrimeQuizResult } from '../utils/cybercrimeUtils'
+import QuizResults from './QuizResults'
 
 interface CybercrimesQuizProps {
   questions: QuizQuestion[]
@@ -22,6 +24,9 @@ const CybercrimesQuiz: React.FC<CybercrimesQuizProps> = ({
   const [score, setScore] = useState(0)
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [quizCompleted, setQuizCompleted] = useState(false)
+  const [answers, setAnswers] = useState<UserAnswer[]>([])
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null)
+  const [startTime] = useState(Date.now())
 
   // Reset state when questions change
   useEffect(() => {
@@ -30,6 +35,8 @@ const CybercrimesQuiz: React.FC<CybercrimesQuizProps> = ({
     setShowFeedback(false)
     setScore(0)
     setQuizCompleted(false)
+    setAnswers([])
+    setQuizResult(null)
   }, [questions])
 
   // If no questions, show error state
@@ -69,7 +76,7 @@ const CybercrimesQuiz: React.FC<CybercrimesQuizProps> = ({
       setTimeLeft((prev) => {
         if (prev === null || prev <= 0) {
           clearInterval(timer)
-          setQuizCompleted(true)
+          handleQuizComplete()
           return 0
         }
         return prev - 1
@@ -92,6 +99,13 @@ const CybercrimesQuiz: React.FC<CybercrimesQuizProps> = ({
   }
 
   const handleNext = () => {
+    // Save answer
+    const newAnswer: UserAnswer = {
+      questionId: currentQuestion.id,
+      selectedOption: selectedAnswer
+    }
+    setAnswers(prev => [...prev, newAnswer])
+
     if (!instantFeedback && selectedAnswer !== null) {
       if (selectedAnswer === currentQuestion.correctAnswer) {
         setScore((prev) => prev + 1)
@@ -103,8 +117,44 @@ const CybercrimesQuiz: React.FC<CybercrimesQuizProps> = ({
       setSelectedAnswer(null)
       setShowFeedback(false)
     } else {
-      setQuizCompleted(true)
+      handleQuizComplete()
     }
+  }
+
+  const handleQuizComplete = () => {
+    const finalScore = score + (selectedAnswer === currentQuestion.correctAnswer && !instantFeedback ? 1 : 0)
+    const finalAnswers = [...answers]
+    
+    // Add last answer if not already added
+    if (!answers.find(a => a.questionId === currentQuestion.id)) {
+      finalAnswers.push({
+        questionId: currentQuestion.id,
+        selectedOption: selectedAnswer
+      })
+    }
+
+    const duration = Math.round((Date.now() - startTime) / 60000) // Duration in minutes
+
+    // Save to history
+    saveCybercrimeQuizResult(
+      finalScore,
+      questions.length,
+      mode,
+      instantFeedback,
+      duration,
+      chapterInfo
+    )
+
+    // Create quiz result
+    const result: QuizResult = {
+      score: finalScore,
+      totalQuestions: questions.length,
+      answers: finalAnswers,
+      questions
+    }
+
+    setQuizResult(result)
+    setQuizCompleted(true)
   }
 
   const formatTime = (seconds: number) => {
@@ -113,24 +163,13 @@ const CybercrimesQuiz: React.FC<CybercrimesQuizProps> = ({
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }
 
-  if (quizCompleted) {
+  if (quizCompleted && quizResult) {
     return (
-      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-8">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-4">
-            Quiz Completed!
-          </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 mb-6">
-            Your score: {score} out of {questions.length}
-          </p>
-          <button
-            onClick={onBack}
-            className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-colors duration-200"
-          >
-            Back to Setup
-          </button>
-        </div>
-      </div>
+      <QuizResults
+        result={quizResult}
+        onTryAgain={onBack}
+        mode={mode}
+      />
     )
   }
 
@@ -187,13 +226,7 @@ const CybercrimesQuiz: React.FC<CybercrimesQuizProps> = ({
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between items-center">
-        <button
-          onClick={onBack}
-          className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors duration-200"
-        >
-          Exit Quiz
-        </button>
+      <div className="flex justify-end">
         <button
           onClick={handleNext}
           disabled={selectedAnswer === null || (instantFeedback && !showFeedback)}

@@ -27,6 +27,7 @@ const CybercrimesSetup: React.FC<CybercrimesSetupProps> = ({ onStartQuiz, totalQ
     { id: 8, name: 'Įkalčių analizės metodai' }
   ]
 
+  
   const handleStart = () => {
     if (selectedMode === 'exam') {
       onStartQuiz(selectedMode, 25, instantFeedback)
@@ -39,7 +40,7 @@ const CybercrimesSetup: React.FC<CybercrimesSetupProps> = ({ onStartQuiz, totalQ
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="w-full">
       <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-8 transition-colors duration-300">
         <div className="space-y-6">
           {/* Mode Selection */}

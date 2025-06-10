@@ -7,6 +7,7 @@ import CybercrimesSetup from '../../components/CybercrimesSetup'
 import { cybercrimeQuestions } from '../../data/cybercrimeQuestions'
 import { getRandomCybercrimeQuestions, getCybercrimeQuestionsByChapter, getAdditionalCybercrimeQuestions } from '../../utils/cybercrimeUtils'
 import { QuizQuestion } from '../../types/quiz'
+import CybercrimesHistory from '../../components/CybercrimesHistory'
 
 type QuizMode = 'setup' | 'quiz'
 type QuizType = 'full' | 'exam' | 'chapter' | 'additional'
@@ -63,7 +64,7 @@ export default function CybercrimesPage() {
     return (
       <main className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors pt-5 duration-300">
         {/* Back Button - Top Left */}
-        <div className="absolute top-10 left-10 z-10">
+        <div className="absolute top-4 left-4 md:top-10 md:left-10 z-10">
           <Link href="/" className="flex items-center px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:border-green-300 dark:hover:border-green-600 transition-colors duration-200 shadow-sm">
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -72,7 +73,7 @@ export default function CybercrimesPage() {
           </Link>
         </div>
 
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 pt-16 md:pt-8">
           <header className="text-center py-8">
             <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-4">
               Cybercrimes Practice
@@ -82,10 +83,18 @@ export default function CybercrimesPage() {
             </p>
           </header>
           
-          <CybercrimesSetup 
-            onStartQuiz={handleStartQuiz}
-            totalQuestions={cybercrimeQuestions.length}
-          />
+          {/* Quiz Setup */}
+          <div className="max-w-7xl mx-auto mb-8">
+            <CybercrimesSetup 
+              onStartQuiz={handleStartQuiz}
+              totalQuestions={cybercrimeQuestions.length}
+            />
+          </div>
+
+          {/* Quiz History */}
+          <div className="max-w-7xl mx-auto">
+            <CybercrimesHistory />
+          </div>
         </div>
       </main>
     )
@@ -101,6 +110,16 @@ export default function CybercrimesPage() {
           instantFeedback={instantFeedback}
           chapterInfo={chapterInfo}
         />
+        
+        {/* Exit Quiz Button */}
+        <div className="mt-[5vh] text-center">
+          <button
+            onClick={handleBackToSetup}
+            className="px-6 py-3 text-red-600 dark:text-red-400 border border-transparent hover:border-red-600 dark:hover:border-red-400 rounded-xl font-medium hover:bg-red-600/60 hover:text-white transition-all duration-200"
+          >
+            Exit Quiz
+          </button>
+        </div>
       </div>
     </div>
   )
