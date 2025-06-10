@@ -1,103 +1,107 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
+import CybercrimesQuiz from '../../components/CybercrimesQuiz'
+import CybercrimesSetup from '../../components/CybercrimesSetup'
+import { cybercrimeQuestions } from '../../data/cybercrimeQuestions'
+import { getRandomCybercrimeQuestions, getCybercrimeQuestionsByChapter, getAdditionalCybercrimeQuestions } from '../../utils/cybercrimeUtils'
+import { QuizQuestion } from '../../types/quiz'
+
+type QuizMode = 'setup' | 'quiz'
+type QuizType = 'full' | 'exam' | 'chapter' | 'additional'
 
 export default function CybercrimesPage() {
-  return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-      {/* Back Button - Top Left */}
-      <div className="absolute top-10 left-10 z-10">
-        <Link href="/" className="flex items-center px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:border-red-300 dark:hover:border-red-600 transition-colors duration-200 shadow-sm">
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span className="text-sm font-medium">Back</span>
-        </Link>
-      </div>
+  const [mode, setMode] = useState<QuizMode>('setup')
+  const [currentQuestions, setCurrentQuestions] = useState<QuizQuestion[]>([])
+  const [quizType, setQuizType] = useState<QuizType>('full')
+  const [instantFeedback, setInstantFeedback] = useState(false)
+  const [chapterInfo, setChapterInfo] = useState<{ id: number, name: string } | undefined>()
 
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center py-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-4">
-            Cybercrimes Practice
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400">
-            Master Cybercrime Investigation and Digital Evidence Handling
-          </p>
-        </header>
-        
-        {/* Coming Soon Content */}
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700 p-12 text-center transition-colors duration-300">
-            <div className="w-24 h-24 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-8">
-              <svg className="w-12 h-12 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            
-            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-4 transition-colors duration-300">
-              Coming Soon!
-            </h2>
-            
-            <p className="text-xl text-slate-600 dark:text-slate-400 mb-8 transition-colors duration-300">
-              The Cybercrimes practice module is currently under development.
-            </p>
-            
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-800 p-6 mb-8 transition-colors duration-300">
-              <h3 className="text-lg font-semibold text-red-800 dark:text-red-300 mb-3 transition-colors duration-300">
-                What to Expect
-              </h3>
-              <div className="grid md:grid-cols-2 gap-4 text-left">
-                <div className="space-y-2 text-red-700 dark:text-red-300 transition-colors duration-300">
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                    </svg>
-                    Cybercrime investigation methods
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                    </svg>
-                    Digital evidence procedures
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                    </svg>
-                    Legal frameworks & compliance
-                  </div>
-                </div>
-                <div className="space-y-2 text-red-700 dark:text-red-300 transition-colors duration-300">
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                    </svg>
-                    Incident response procedures
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                    </svg>
-                    Cybersecurity law enforcement
-                  </div>
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                    </svg>
-                    Case study analysis
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="text-slate-500 dark:text-slate-400 transition-colors duration-300">
-              <p>Questions and practice materials will be added soon.</p>
-              <p className="mt-2">Check back later for updates!</p>
-            </div>
-          </div>
+  const handleStartQuiz = (
+    type: QuizType, 
+    questionCount?: number, 
+    feedback?: boolean,
+    chapterId?: number,
+    chapterName?: string
+  ) => {
+    let questions: QuizQuestion[]
+    
+    if (type === 'exam' && questionCount) {
+      questions = getRandomCybercrimeQuestions(cybercrimeQuestions, questionCount)
+    } else if (type === 'chapter' && chapterId) {
+      questions = getCybercrimeQuestionsByChapter(cybercrimeQuestions, chapterId)
+      setChapterInfo({ id: chapterId, name: chapterName || `Topic ${chapterId}` })
+    } else if (type === 'additional') {
+      questions = getAdditionalCybercrimeQuestions(cybercrimeQuestions)
+      setChapterInfo({ id: 7, name: 'Additional Practice Questions' })
+    } else {
+      // Convert all questions to QuizQuestion type
+      questions = cybercrimeQuestions.map(q => ({
+        id: q.id.toString(),
+        question: q.question,
+        options: q.options,
+        correctAnswer: q.options.indexOf(q.correctAnswer),
+        explanation: '',
+        chapter: 0 // Default chapter if not specified
+      }))
+    }
+    
+    setCurrentQuestions(questions)
+    setQuizType(type)
+    setInstantFeedback(feedback || false)
+    setMode('quiz')
+  }
+
+  const handleBackToSetup = () => {
+    setMode('setup')
+    setCurrentQuestions([])
+    setChapterInfo(undefined)
+  }
+
+  if (mode === 'setup') {
+    return (
+      <main className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors pt-5 duration-300">
+        {/* Back Button - Top Left */}
+        <div className="absolute top-10 left-10 z-10">
+          <Link href="/" className="flex items-center px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 hover:border-green-300 dark:hover:border-green-600 transition-colors duration-200 shadow-sm">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="text-sm font-medium">Back</span>
+          </Link>
         </div>
+
+        <div className="container mx-auto px-4">
+          <header className="text-center py-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-4">
+              Cybercrimes Practice
+            </h1>
+            <p className="text-lg text-slate-600 dark:text-slate-400">
+              Master Cybercrime Investigation and Digital Forensics
+            </p>
+          </header>
+          
+          <CybercrimesSetup 
+            onStartQuiz={handleStartQuiz}
+            totalQuestions={cybercrimeQuestions.length}
+          />
+        </div>
+      </main>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl">
+        <CybercrimesQuiz 
+          questions={currentQuestions}
+          onBack={handleBackToSetup}
+          mode={quizType}
+          instantFeedback={instantFeedback}
+          chapterInfo={chapterInfo}
+        />
       </div>
-    </main>
+    </div>
   )
 } 
