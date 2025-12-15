@@ -16,7 +16,7 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 mt-12">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {/* Testing Section */}
           <Link href="/testing" className="group">
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer h-[380px] md:h-[400px] flex flex-col">
@@ -227,6 +227,60 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Report writing & testimony
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Data Mining Section */}
+          <Link href="/duomenu-gavyba" className="group">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer h-[380px] md:h-[400px] flex flex-col">
+              <div className="p-8 flex flex-col h-full">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 ml-4">
+                    Data Mining
+                  </h2>
+                </div>
+                
+                {/* Exam Date */}
+                <div className="mb-4 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800">
+                  <div className="flex items-center justify-center">
+                    <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span className="text-indigo-700 dark:text-indigo-300 font-semibold text-sm">
+                      Exam: TBA
+                    </span>
+                  </div>
+                </div>
+                
+                <p className="text-slate-600 dark:text-slate-400 mb-4 flex-shrink-0">
+                  Master data mining concepts, machine learning algorithms, and knowledge discovery techniques. Comprehensive preparation for data science certification.
+                </p>
+                <div className="space-y-3 flex-grow">
+                  <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    CRISP-DM & KDD processes
+                  </div>
+                  <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Machine learning algorithms
+                  </div>
+                  <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Pattern recognition & analysis
                   </div>
                 </div>
               </div>

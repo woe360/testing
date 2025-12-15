@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { QuizQuestion, QuizResult, UserAnswer } from '../types/quiz'
 import { saveForensicsQuizResult } from '../utils/forensicsUtils'
 import QuizResults from './QuizResults'
@@ -9,6 +9,30 @@ interface ForensicsQuizProps {
   mode: 'full' | 'exam' | 'chapter' | 'additional'
   instantFeedback: boolean
   chapterInfo?: { id: number; name: string }
+}
+
+// Shuffle array using Fisher-Yates algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
+// Shuffle question options and update correctAnswer index
+const shuffleQuestion = (question: QuizQuestion): QuizQuestion => {
+  const indices = question.options.map((_, i) => i)
+  const shuffledIndices = shuffleArray(indices)
+  const shuffledOptions = shuffledIndices.map(i => question.options[i])
+  const newCorrectAnswer = shuffledIndices.indexOf(question.correctAnswer)
+  
+  return {
+    ...question,
+    options: shuffledOptions,
+    correctAnswer: newCorrectAnswer
+  }
 }
 
 const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
@@ -27,6 +51,7 @@ const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
   const [answers, setAnswers] = useState<UserAnswer[]>([])
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null)
   const [startTime] = useState(Date.now())
+  const [shuffledQuestions, setShuffledQuestions] = useState<Map<string, QuizQuestion>>(new Map())
 
   // Reset state when questions change
   useEffect(() => {
@@ -61,7 +86,20 @@ const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
     )
   }
 
-  const currentQuestion = questions[currentQuestionIndex]
+  // Get or create shuffled version of current question
+  const currentQuestion = useMemo(() => {
+    const originalQuestion = questions[currentQuestionIndex]
+    if (!originalQuestion) return null
+    
+    const shuffled = shuffledQuestions.get(originalQuestion.id)
+    if (shuffled) {
+      return shuffled
+    }
+    
+    const newShuffled = shuffleQuestion(originalQuestion)
+    setShuffledQuestions(prev => new Map(prev).set(originalQuestion.id, newShuffled))
+    return newShuffled
+  }, [questions, currentQuestionIndex, shuffledQuestions])
 
   useEffect(() => {
     if (mode === 'exam') {
@@ -87,7 +125,7 @@ const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
   }, [timeLeft])
 
   const handleAnswerSelect = (answerIndex: number) => {
-    if (showFeedback || quizCompleted) return
+    if (showFeedback || quizCompleted || !currentQuestion) return
 
     setSelectedAnswer(answerIndex)
     if (instantFeedback) {
@@ -99,6 +137,8 @@ const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
   }
 
   const handleNext = () => {
+    if (!currentQuestion) return
+    
     // Save answer
     const newAnswer: UserAnswer = {
       questionId: currentQuestion.id,
@@ -122,11 +162,13 @@ const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
   }
 
   const handleQuizComplete = () => {
+    if (!currentQuestion) return
+    
     const finalScore = score + (selectedAnswer === currentQuestion.correctAnswer && !instantFeedback ? 1 : 0)
     const finalAnswers = [...answers]
     
     // Add last answer if not already added
-    if (!answers.find(a => a.questionId === currentQuestion.id)) {
+    if (currentQuestion && !answers.find(a => a.questionId === currentQuestion.id)) {
       finalAnswers.push({
         questionId: currentQuestion.id,
         selectedOption: selectedAnswer
@@ -218,6 +260,7 @@ const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
       </div>
 
       {/* Question */}
+      {currentQuestion && (
       <div className="mb-8">
         <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-6 leading-relaxed transition-colors duration-300">
           {currentQuestion.question}
@@ -273,6 +316,7 @@ const ForensicsQuiz: React.FC<ForensicsQuizProps> = ({
           })}
         </div>
       </div>
+      )}
 
       {/* Navigation */}
       <div className="flex justify-between items-center">

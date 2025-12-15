@@ -2,12 +2,12 @@
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { QuizQuestion as QuizQuestionType, UserAnswer, QuizResult, QuizState } from '../types/quiz'
-import { saveStatisticsQuizResult } from '../utils/statisticsUtils'
+import { saveDuomenuGavybaQuizResult } from '../utils/duomenuGavybaUtils'
 import QuizQuestion from './QuizQuestion'
 import QuizNavigation from './QuizNavigation'
-import StatisticsQuizResults from './StatisticsQuizResults'
+import QuizResults from './QuizResults'
 
-interface StatisticsQuizProps {
+interface DuomenuGavybaQuizProps {
   questions: QuizQuestionType[]
   onBack?: () => void
   mode?: 'full' | 'exam' | 'chapter' | 'additional'
@@ -39,7 +39,7 @@ const shuffleQuestion = (question: QuizQuestionType): QuizQuestionType => {
   }
 }
 
-const StatisticsQuiz: React.FC<StatisticsQuizProps> = ({ 
+const DuomenuGavybaQuiz: React.FC<DuomenuGavybaQuizProps> = ({ 
   questions, 
   onBack, 
   mode = 'full', 
@@ -147,11 +147,11 @@ const StatisticsQuiz: React.FC<StatisticsQuizProps> = ({
   useEffect(() => {
     if (quizState.isCompleted && quizState.showResults && !resultSaved) {
       const result = calculateResult()
-      saveStatisticsQuizResult(mode, result.score, result.totalQuestions, instantFeedback, startTime, chapterInfo)
+      saveDuomenuGavybaQuizResult(mode, result.score, result.totalQuestions, instantFeedback, startTime, chapterInfo)
       setResultSaved(true)
       
-      // Trigger a custom event to notify StatisticsHistory component
-      window.dispatchEvent(new Event('statisticsQuizCompleted'))
+      // Trigger a custom event to notify DuomenuGavybaHistory component
+      window.dispatchEvent(new Event('duomenuGavybaQuizCompleted'))
     }
   }, [quizState.isCompleted, quizState.showResults, resultSaved, mode, instantFeedback, startTime, chapterInfo])
 
@@ -180,10 +180,9 @@ const StatisticsQuiz: React.FC<StatisticsQuizProps> = ({
               </span>
             </div>
           )}
-          <StatisticsQuizResults 
+          <QuizResults 
             result={calculateResult()} 
             onTryAgain={handleTryAgain}
-            mode={mode}
           />
         </div>
       </div>
@@ -194,8 +193,8 @@ const StatisticsQuiz: React.FC<StatisticsQuizProps> = ({
   const isLastQuestion = quizState.currentQuestionIndex === questions.length - 1
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-4 md:py-8 px-2 md:px-4 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-4 md:py-8 px-2 md:px-4 transition-colors duration-300 flex items-center justify-center">
+      <div className="max-w-4xl mx-auto w-full">
         {/* Quiz Mode Indicator */}
         <div className="text-center mb-4 md:mb-6">
           <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
@@ -255,7 +254,7 @@ const StatisticsQuiz: React.FC<StatisticsQuizProps> = ({
               onClick={onBack}
               className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs md:text-sm transition-colors duration-300"
             >
-              ← Back to Statistics Practice Selection
+              ← Back to Data Mining Practice Selection
             </button>
           </div>
         )}
@@ -264,4 +263,5 @@ const StatisticsQuiz: React.FC<StatisticsQuizProps> = ({
   )
 }
 
-export default StatisticsQuiz 
+export default DuomenuGavybaQuiz
+

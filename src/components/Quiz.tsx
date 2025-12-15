@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { QuizQuestion as QuizQuestionType, UserAnswer, QuizResult, QuizState } from '../types/quiz'
 import { saveQuizResult } from '../utils/quizUtils'
 import QuizQuestion from './QuizQuestion'
@@ -13,6 +13,30 @@ interface QuizProps {
   mode?: 'full' | 'exam' | 'chapter' | 'additional'
   instantFeedback?: boolean
   chapterInfo?: { id: number, name: string }
+}
+
+// Shuffle array using Fisher-Yates algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
+// Shuffle question options and update correctAnswer index
+const shuffleQuestion = (question: QuizQuestionType): QuizQuestionType => {
+  const indices = question.options.map((_, i) => i)
+  const shuffledIndices = shuffleArray(indices)
+  const shuffledOptions = shuffledIndices.map(i => question.options[i])
+  const newCorrectAnswer = shuffledIndices.indexOf(question.correctAnswer)
+  
+  return {
+    ...question,
+    options: shuffledOptions,
+    correctAnswer: newCorrectAnswer
+  }
 }
 
 const Quiz: React.FC<QuizProps> = ({ 
@@ -30,8 +54,23 @@ const Quiz: React.FC<QuizProps> = ({
   })
   const [startTime] = useState<Date>(new Date())
   const [resultSaved, setResultSaved] = useState(false)
+  const [shuffledQuestions, setShuffledQuestions] = useState<Map<string, QuizQuestionType>>(new Map())
 
-  const currentQuestion = questions[quizState.currentQuestionIndex]
+  // Get or create shuffled version of current question
+  const currentQuestion = useMemo(() => {
+    const originalQuestion = questions[quizState.currentQuestionIndex]
+    if (!originalQuestion) return null
+    
+    const shuffled = shuffledQuestions.get(originalQuestion.id)
+    if (shuffled) {
+      return shuffled
+    }
+    
+    const newShuffled = shuffleQuestion(originalQuestion)
+    setShuffledQuestions(prev => new Map(prev).set(originalQuestion.id, newShuffled))
+    return newShuffled
+  }, [questions, quizState.currentQuestionIndex, shuffledQuestions])
+
   const currentAnswer = quizState.answers.find(a => a.questionId === currentQuestion?.id)
 
   const handleOptionSelect = useCallback((optionIndex: number) => {
@@ -87,6 +126,11 @@ const Quiz: React.FC<QuizProps> = ({
 
   const calculateResult = (): QuizResult => {
     const score = quizState.answers.reduce((total, answer) => {
+      const shuffledQuestion = shuffledQuestions.get(answer.questionId)
+      if (shuffledQuestion) {
+        return total + (answer.selectedOption === shuffledQuestion.correctAnswer ? 1 : 0)
+      }
+      // Fallback to original question if shuffled version not found
       const question = questions.find(q => q.id === answer.questionId)
       return total + (answer.selectedOption === question?.correctAnswer ? 1 : 0)
     }, 0)
@@ -182,14 +226,16 @@ const Quiz: React.FC<QuizProps> = ({
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-xl md:rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 md:p-8 transition-colors duration-300">
-          <QuizQuestion
-            question={currentQuestion}
-            questionNumber={quizState.currentQuestionIndex + 1}
-            totalQuestions={questions.length}
-            selectedOption={currentAnswer?.selectedOption ?? null}
-            onOptionSelect={handleOptionSelect}
-            instantFeedback={instantFeedback}
-          />
+          {currentQuestion && (
+            <QuizQuestion
+              question={currentQuestion}
+              questionNumber={quizState.currentQuestionIndex + 1}
+              totalQuestions={questions.length}
+              selectedOption={currentAnswer?.selectedOption ?? null}
+              onOptionSelect={handleOptionSelect}
+              instantFeedback={instantFeedback}
+            />
+          )}
           
           <QuizNavigation
             currentQuestion={quizState.currentQuestionIndex}
